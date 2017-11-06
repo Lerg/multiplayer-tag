@@ -1,0 +1,44 @@
+local api = require('main.api')
+
+local count = 10
+
+function init(self)
+	self.ships = {}
+	api.connect()
+end
+
+function update(self)
+	for i = 1, #api.players do
+		local player = api.players[i]
+		if self.ships[player.id] then
+			if player.has_disconnected then
+				go.delete(self.ships[player.id])
+				self.ships[player.id] = nil
+			else
+				local ship = self.ships[player.id]
+				msg.post(msg.url(nil, ship, 'script'), 'server_update', player)
+			end
+		else
+			local ship = factory.create(
+				'#factory',
+				vmath.vector3(player.x, player.y, 50), -- Position
+				vmath.quat_rotation_z(player.angle), -- Rotation
+				{
+					is_local_player = player.is_new,
+					is_tag = player.is_tag
+				},
+				vmath.vector3(10, 10, 10)) -- Scale
+				
+			self.ships[player.id] = ship
+				
+			local position = go.get_position('/light')
+			local light = vmath.vector4(position.x, position.y, position.z, 0)
+			model.set_constant(msg.url(nil, ship, 'model'), 'light', light)
+		end
+	end
+	api.players = {}
+end
+
+function final(self)
+	api.disconnect()
+end

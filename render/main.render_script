@@ -1,0 +1,36 @@
+function init(self)
+	self.model_pred = render.predicate({'model'})
+	self.clear_color = vmath.vector4(0.05, 0.4, 0.6, 1)
+	
+	-- Orthographic view matrix.
+	local camera_position = vmath.vector3(0, 20, 20)
+	local camera_look_at = vmath.vector3(0, 0, 0)
+	local camera_up = vmath.vector3(0, 0, 1)
+	self.view = vmath.matrix4_look_at(camera_position, camera_look_at, camera_up)
+end
+
+function update(self, dt)
+	render.clear({[render.BUFFER_COLOR_BIT] = self.clear_color, [render.BUFFER_DEPTH_BIT] = 1, [render.BUFFER_STENCIL_BIT] = 0})
+	render.set_viewport(0, 0, render.get_window_width(), render.get_window_height())
+	
+	-- Orthographic.
+	render.set_view(self.view)
+	local width = render.get_window_width()
+	local height = render.get_window_height()
+	if width / height > 16 / 9 then
+		local scale = 1280 / width
+		width, height = width * scale, height * scale
+	else
+		local scale = 720 / height
+		width, height = width * scale, height * scale
+	end
+	render.set_projection(vmath.matrix4_orthographic(
+		-width / 2, width / 2,
+		-height / 2, height / 2,
+		-1000, 1000))
+	
+	render.enable_state(render.STATE_DEPTH_TEST)
+	render.enable_state(render.STATE_CULL_FACE)
+	render.set_depth_mask(true)
+	render.draw(self.model_pred)
+end
