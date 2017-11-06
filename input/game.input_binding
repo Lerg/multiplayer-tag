@@ -66,3 +66,7 @@ gamepad_trigger {
   input: GAMEPAD_LSHOULDER
   action: "toggle_view"
 }
+touch_trigger {
+  input: TOUCH_MULTI
+  action: "touch"
+}

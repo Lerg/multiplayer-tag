@@ -87,7 +87,32 @@ function on_input(self, action_id, action)
 			is_valid_input = true
 		end
 	elseif action_id == hash('touch') then
-		--
+		local turn_left, turn_right, thrust = false, false, false
+		local w = tonumber(sys.get_config('display.width'))
+		for i = 1, #action.touch do
+			if not action.touch[i].released then
+				local x = action.touch[i].screen_x
+				if x < w / 4 then
+					turn_left = true
+				elseif x < w / 2 then
+					turn_right = true
+				elseif x > w / 1.5 then
+					thrust = true
+				end
+			end
+		end
+		local turn = 0
+		if (turn_left or turn_right) and not (turn_left and turn_right) then
+			turn = turn_left and -1 or 1
+		end
+		if self.turn ~= turn then
+			self.turn = turn
+			is_valid_input = true
+		end
+		if self.thrust ~= thrust then
+			self.thrust = thrust
+			is_valid_input = true
+		end
 	end
 	if is_valid_input then
 		local position = go.get_position()

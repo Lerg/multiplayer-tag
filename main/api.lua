@@ -1,8 +1,8 @@
 local websocket = require('defnet.websocket.client_async')
 local rxijson = require('libs.rxijson')
 
-local host = 'ws://127.0.0.1:8080/game'
---local host = 'ws://37.143.9.232:8080/game'
+--local host = 'ws://127.0.0.1:8080/game'
+local host = 'ws://37.143.9.232'
 
 local _M = {}
 

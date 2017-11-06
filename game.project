@@ -29,7 +29,7 @@ include_dirs =
 bundle_identifier = com.spiralcodestudio.test1
 
 [android]
-package = com.spiralcodestudio.test1
+package = com.spiralcodestudio.multiplayertag
 
 [osx]
 bundle_identifier = com.spiralcodestudio.test1
